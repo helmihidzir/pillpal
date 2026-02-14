@@ -2,6 +2,7 @@ import { Head, Link, router, usePage } from "@inertiajs/react"
 import {
   Camera,
   Check,
+  CircleCheck,
   CirclePlus,
   Copy,
   Moon,
@@ -13,7 +14,6 @@ import { useState } from "react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import AppLayout from "@/layouts/app-layout"
 import {
@@ -29,16 +29,17 @@ interface MedicationsPageProps extends SharedProps {
 }
 
 const TIME_CONFIG = {
-  morning: { label: "Pagi (Morning)", icon: Sunrise, order: 0 },
-  afternoon: { label: "Petang (Afternoon)", icon: Sun, order: 1 },
-  evening: { label: "Malam (Evening)", icon: Moon, order: 2 },
+  morning: { label: "Morning", icon: Sunrise, order: 0 },
+  afternoon: { label: "Afternoon", icon: Sun, order: 1 },
+  evening: { label: "Evening", icon: Moon, order: 2 },
 } as const
 
 function getGreeting(name: string) {
   const hour = new Date().getHours()
-  if (hour < 12) return `Selamat pagi, ${name}`
-  if (hour < 18) return `Selamat petang, ${name}`
-  return `Selamat malam, ${name}`
+  const firstName = name.split(" ")[0]
+  if (hour < 12) return `Good Morning, ${firstName}!`
+  if (hour < 18) return `Good Afternoon, ${firstName}!`
+  return `Good Evening, ${firstName}!`
 }
 
 function MedicationCard({
@@ -66,8 +67,8 @@ function MedicationCard({
         preserveScroll: true,
         onSuccess: () => {
           if (newStatus === "taken") {
-            toast("Medication taken!", {
-              description: `${medication.name} marked as taken`,
+            toast("Marked as taken!", {
+              description: medication.name,
               action: {
                 label: "Undo",
                 onClick: () => {
@@ -90,43 +91,48 @@ function MedicationCard({
   }
 
   return (
-    <Card
-      className={`transition-all ${isTaken ? "border-emerald-200 bg-emerald-50" : "border-stone-200 bg-white"}`}
+    <button
+      onClick={handleToggle}
+      className={`w-full flex items-center gap-4 rounded-2xl p-5 transition-all text-left ${
+        isTaken
+          ? "bg-[#F5EFE6] border-2 border-[#C4954A]"
+          : "bg-white border-2 border-gray-200 hover:border-[#C4954A] active:scale-[0.98]"
+      }`}
     >
-      <CardContent className="flex items-center gap-4 p-4">
-        <div className="flex-1 min-w-0">
-          <p
-            className={`text-lg font-semibold ${isTaken ? "text-emerald-700 line-through" : "text-stone-900"}`}
-          >
-            {medication.name}
+      <div
+        className={`shrink-0 h-14 w-14 rounded-xl flex items-center justify-center ${
+          isTaken
+            ? "bg-[#2D2926] text-white"
+            : "bg-gray-100 text-gray-400"
+        }`}
+      >
+        {isTaken ? (
+          <Check className="h-7 w-7" strokeWidth={3} />
+        ) : (
+          <Pill className="h-7 w-7" />
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className={`text-[18px] font-bold ${isTaken ? "text-[#2D2926] line-through" : "text-gray-900"}`}>
+          {medication.name}
+        </p>
+        {medication.dosage && (
+          <p className={`text-[15px] mt-0.5 ${isTaken ? "text-[#B8860B]" : "text-gray-500"}`}>
+            {medication.dosage}
           </p>
-          {medication.dosage && (
-            <p className="text-sm text-stone-500">{medication.dosage}</p>
-          )}
-          {medication.instructions && (
-            <p className="text-sm text-stone-400 italic">
-              {medication.instructions}
-            </p>
-          )}
-        </div>
-        <Button
-          variant={isTaken ? "default" : "outline"}
-          size="lg"
-          className={`shrink-0 h-14 w-14 rounded-full ${
-            isTaken
-              ? "bg-emerald-600 hover:bg-emerald-700"
-              : "border-2 border-stone-300 hover:border-emerald-500 hover:bg-emerald-50"
-          }`}
-          onClick={handleToggle}
-        >
-          {isTaken ? (
-            <Check className="h-6 w-6" />
-          ) : (
-            <Pill className="h-6 w-6" />
-          )}
-        </Button>
-      </CardContent>
-    </Card>
+        )}
+        {medication.instructions && (
+          <p className={`text-[14px] mt-0.5 ${isTaken ? "text-[#B8860B]" : "text-gray-400"}`}>
+            {medication.instructions}
+          </p>
+        )}
+      </div>
+      {isTaken && (
+        <span className="text-[13px] font-bold text-[#B8860B] uppercase tracking-wide">
+          Done
+        </span>
+      )}
+    </button>
   )
 }
 
@@ -134,65 +140,62 @@ function ShareCodeCard({ code }: { code: string }) {
   function handleCopy() {
     navigator.clipboard.writeText(code)
     toast("Code copied!", {
-      description: "Share this code with your family caregiver",
+      description: "Share this with your caregiver",
     })
   }
 
   return (
-    <Card className="border-emerald-200 bg-emerald-50">
-      <CardContent className="p-4">
-        <p className="text-sm font-medium text-emerald-700 mb-2">
-          Share with Caregiver
-        </p>
-        <div className="flex items-center gap-3">
-          <span className="text-2xl font-bold tracking-[0.3em] text-emerald-900 font-mono">
+    <div className="rounded-2xl bg-white border-2 border-gray-200 p-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-[14px] font-bold text-gray-500 mb-1">
+            Your Share Code
+          </p>
+          <span className="text-[28px] font-bold tracking-[0.15em] text-gray-900 font-mono">
             {code}
           </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCopy}
-            className="border-emerald-300"
-          >
-            <Copy className="h-4 w-4 mr-1" />
-            Copy
-          </Button>
         </div>
-        <p className="text-xs text-emerald-600 mt-1">
-          Your caregiver enters this code to monitor your medications
-        </p>
-      </CardContent>
-    </Card>
+        <button
+          onClick={handleCopy}
+          className="h-12 w-12 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors active:scale-95"
+        >
+          <Copy className="h-5 w-5 text-gray-600" />
+        </button>
+      </div>
+      <p className="text-[14px] text-gray-500 mt-2">
+        Give this code to your caregiver so they can monitor your medications
+      </p>
+    </div>
   )
 }
 
 function EmptyState() {
   return (
-    <Card className="border-dashed border-2 border-stone-300">
-      <CardContent className="flex flex-col items-center justify-center p-8 text-center">
-        <Pill className="h-12 w-12 text-stone-400 mb-4" />
-        <h3 className="text-lg font-semibold text-stone-700 mb-2">
-          No medications yet
-        </h3>
-        <p className="text-stone-500 mb-4">
-          Add your first medication to start tracking
-        </p>
-        <div className="flex gap-3">
-          <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
-            <Link href={newMedicineScanPath()}>
-              <Camera className="h-5 w-5 mr-2" />
-              Scan Medicine
-            </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href={newMedicationPath()}>
-              <CirclePlus className="h-5 w-5 mr-2" />
-              Add Manually
-            </Link>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="rounded-2xl bg-white border-2 border-gray-200 p-10 text-center">
+      <div className="h-20 w-20 rounded-2xl bg-[#C4954A]/15 flex items-center justify-center mx-auto mb-5">
+        <Pill className="h-10 w-10 text-[#B8860B]" />
+      </div>
+      <h3 className="text-[22px] font-bold text-gray-900 mb-2">
+        No Medications Yet
+      </h3>
+      <p className="text-[16px] text-gray-500 mb-8">
+        Add your first medication to start tracking
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <Button asChild className="bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-xl px-6 h-14 text-[16px] font-bold inline-flex items-center justify-center gap-2">
+          <Link href={newMedicineScanPath()}>
+            <Camera className="h-5 w-5" />
+            Scan Medicine
+          </Link>
+        </Button>
+        <Button asChild variant="outline" className="rounded-xl px-6 h-14 text-[16px] font-bold border-2 border-gray-300 hover:bg-gray-50 inline-flex items-center justify-center gap-2">
+          <Link href={newMedicationPath()}>
+            <CirclePlus className="h-5 w-5" />
+            Add Manually
+          </Link>
+        </Button>
+      </div>
+    </div>
   )
 }
 
@@ -229,14 +232,14 @@ export default function MedicationsIndex() {
     <AppLayout>
       <Head title="My Medications" />
 
-      <div className="mx-auto max-w-2xl px-4 py-6 space-y-6">
+      <div className="mx-auto max-w-2xl px-4 py-8 space-y-6">
         {/* Greeting */}
         <div>
-          <h1 className="text-2xl font-bold text-stone-900">
+          <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
             {getGreeting(auth.user.name)}
           </h1>
-          <p className="text-stone-500">
-            {new Date().toLocaleDateString("ms-MY", {
+          <p className="text-[16px] text-gray-500 mt-1">
+            {new Date().toLocaleDateString("en-MY", {
               weekday: "long",
               year: "numeric",
               month: "long",
@@ -247,19 +250,23 @@ export default function MedicationsIndex() {
 
         {/* Progress */}
         {totalLogs > 0 && (
-          <Card className="bg-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-stone-600">
-                  Today&apos;s Progress
-                </span>
-                <span className="text-sm font-bold text-emerald-700">
-                  {takenLogs}/{totalLogs} taken
-                </span>
+          <div className="rounded-2xl bg-white border-2 border-gray-200 p-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[15px] font-bold text-gray-600">
+                Today's Progress
+              </span>
+              <span className="text-[18px] font-bold text-gray-900">
+                {takenLogs} / {totalLogs}
+              </span>
+            </div>
+            <Progress value={progressPercent} className="h-3 rounded-full" />
+            {progressPercent === 100 && (
+              <div className="flex items-center gap-2 mt-3 text-[#B8860B]">
+                <CircleCheck className="h-5 w-5" />
+                <span className="text-[15px] font-bold">All done for today!</span>
               </div>
-              <Progress value={progressPercent} className="h-3" />
-            </CardContent>
-          </Card>
+            )}
+          </div>
         )}
 
         {/* Share Code */}
@@ -275,9 +282,9 @@ export default function MedicationsIndex() {
               const Icon = config?.icon || Sun
               return (
                 <div key={time} className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Icon className="h-5 w-5 text-stone-500" />
-                    <h2 className="text-lg font-semibold text-stone-700">
+                  <div className="flex items-center gap-2.5 px-1">
+                    <Icon className="h-5 w-5 text-gray-400" />
+                    <h2 className="text-[16px] font-bold text-gray-500">
                       {config?.label || time}
                     </h2>
                   </div>
@@ -292,23 +299,23 @@ export default function MedicationsIndex() {
               )
             })}
 
-            <div className="pt-4 flex gap-3">
+            <div className="pt-4 flex flex-col sm:flex-row gap-3">
               <Button
                 asChild
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                className="flex-1 bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-xl h-14 text-[16px] font-bold inline-flex items-center justify-center gap-2"
               >
                 <Link href={newMedicineScanPath()}>
-                  <Camera className="h-5 w-5 mr-2" />
+                  <Camera className="h-5 w-5" />
                   Scan Medicine
                 </Link>
               </Button>
               <Button
                 asChild
                 variant="outline"
-                className="flex-1"
+                className="flex-1 rounded-xl h-14 text-[16px] font-bold border-2 border-gray-300 hover:bg-gray-50 inline-flex items-center justify-center gap-2"
               >
                 <Link href={newMedicationPath()}>
-                  <CirclePlus className="h-5 w-5 mr-2" />
+                  <CirclePlus className="h-5 w-5" />
                   Add Manually
                 </Link>
               </Button>

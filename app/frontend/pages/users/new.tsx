@@ -16,10 +16,10 @@ export default function Register() {
 
   return (
     <AuthLayout
-      title="Create an account"
-      description="Enter your details below to create your account"
+      title="Create an Account"
+      description="Enter your details below to get started"
     >
-      <Head title="Register" />
+      <Head title="Sign Up" />
       <Form
         method="post"
         action={signUpPath()}
@@ -32,50 +32,38 @@ export default function Register() {
             <div className="grid gap-6">
               {/* Role Selection */}
               <div className="grid gap-2">
-                <Label className="text-sm">I am a...</Label>
+                <Label className="text-[15px] font-bold text-gray-700">I am a...</Label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={() => setRole("patient")}
-                    className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-colors ${
+                    className={`flex flex-col items-center gap-3 rounded-xl border-2 p-5 transition-all ${
                       role === "patient"
-                        ? "border-emerald-500 bg-emerald-50"
-                        : "border-stone-200 hover:border-stone-300"
+                        ? "border-[#B8860B] bg-[#F5EFE6] text-[#2D2926]"
+                        : "border-gray-200 hover:border-[#C4954A]"
                     }`}
                   >
-                    <Pill
-                      className={`h-6 w-6 ${role === "patient" ? "text-emerald-600" : "text-stone-400"}`}
-                    />
-                    <span
-                      className={`text-sm font-medium ${role === "patient" ? "text-emerald-700" : "text-stone-600"}`}
-                    >
-                      Patient
-                    </span>
+                    <Pill className="h-7 w-7" />
+                    <span className="text-[15px] font-bold">Patient</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setRole("caregiver")}
-                    className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-colors ${
+                    className={`flex flex-col items-center gap-3 rounded-xl border-2 p-5 transition-all ${
                       role === "caregiver"
-                        ? "border-emerald-500 bg-emerald-50"
-                        : "border-stone-200 hover:border-stone-300"
+                        ? "border-[#B8860B] bg-[#F5EFE6] text-[#2D2926]"
+                        : "border-gray-200 hover:border-[#C4954A]"
                     }`}
                   >
-                    <Heart
-                      className={`h-6 w-6 ${role === "caregiver" ? "text-emerald-600" : "text-stone-400"}`}
-                    />
-                    <span
-                      className={`text-sm font-medium ${role === "caregiver" ? "text-emerald-700" : "text-stone-600"}`}
-                    >
-                      Caregiver
-                    </span>
+                    <Heart className="h-7 w-7" />
+                    <span className="text-[15px] font-bold">Caregiver</span>
                   </button>
                 </div>
                 <input type="hidden" name="role" value={role} />
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name" className="text-[15px] font-bold text-gray-700">Name</Label>
                 <Input
                   id="name"
                   type="text"
@@ -86,12 +74,13 @@ export default function Register() {
                   autoComplete="name"
                   disabled={processing}
                   placeholder="Full name"
+                  className="h-13 text-[16px] rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
                 />
-                <InputError messages={errors.name} className="mt-2" />
+                <InputError messages={errors.name} className="mt-1" />
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="email">Email address</Label>
+                <Label htmlFor="email" className="text-[15px] font-bold text-gray-700">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -100,12 +89,13 @@ export default function Register() {
                   tabIndex={2}
                   autoComplete="email"
                   placeholder="email@example.com"
+                  className="h-13 text-[16px] rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
                 />
                 <InputError messages={errors.email} />
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-[15px] font-bold text-gray-700">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -114,12 +104,13 @@ export default function Register() {
                   tabIndex={3}
                   autoComplete="new-password"
                   placeholder="Password"
+                  className="h-13 text-[16px] rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
                 />
                 <InputError messages={errors.password} />
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="password_confirmation">Confirm password</Label>
+                <Label htmlFor="password_confirmation" className="text-[15px] font-bold text-gray-700">Confirm Password</Label>
                 <Input
                   id="password_confirmation"
                   type="password"
@@ -128,20 +119,25 @@ export default function Register() {
                   tabIndex={4}
                   autoComplete="new-password"
                   placeholder="Confirm password"
+                  className="h-13 text-[16px] rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
                 />
                 <InputError messages={errors.password_confirmation} />
               </div>
 
-              <Button type="submit" className="mt-2 w-full bg-emerald-600 hover:bg-emerald-700" tabIndex={5}>
+              <Button
+                type="submit"
+                className="mt-2 w-full h-13 bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-xl text-[16px] font-bold"
+                tabIndex={5}
+              >
                 {processing && <Spinner />}
-                Create account
+                Create Account
               </Button>
             </div>
 
-            <div className="text-muted-foreground text-center text-sm">
+            <div className="text-center text-[15px] text-gray-500">
               Already have an account?{" "}
-              <TextLink href={signInPath()} tabIndex={6}>
-                Log in
+              <TextLink href={signInPath()} tabIndex={6} className="text-[#B8860B] font-bold hover:underline">
+                Log In
               </TextLink>
             </div>
           </>

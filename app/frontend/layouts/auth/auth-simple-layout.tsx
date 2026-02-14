@@ -22,12 +22,12 @@ export default function AuthSimpleLayout({
           <div className="flex flex-col items-center gap-4">
             <Link
               href={rootPath()}
-              className="flex flex-col items-center gap-2 font-medium"
+              className="flex items-center gap-2.5"
             >
-              <div className="mb-1 flex size-14 items-center justify-center rounded-md">
-                <AppLogoIcon className="size-14 fill-current text-[var(--foreground)] dark:text-white" />
+              <div className="bg-[#2D2926] text-white flex size-10 items-center justify-center rounded-xl">
+                <AppLogoIcon className="size-5" />
               </div>
-              <span className="sr-only">{title}</span>
+              <span className="text-[20px] font-bold text-[#2D2926]">PillPal</span>
             </Link>
 
             <div className="space-y-2 text-center">

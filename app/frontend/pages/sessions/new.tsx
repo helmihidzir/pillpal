@@ -12,10 +12,10 @@ import { newIdentityPasswordResetPath, signInPath, signUpPath } from "@/routes"
 export default function Login() {
   return (
     <AuthLayout
-      title="Log in to your account"
-      description="Enter your email and password below to log in"
+      title="Welcome Back"
+      description="Enter your email and password to continue"
     >
-      <Head title="Log in" />
+      <Head title="Log In" />
       <Form
         method="post"
         action={signInPath()}
@@ -26,7 +26,7 @@ export default function Login() {
           <>
             <div className="grid gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email address</Label>
+                <Label htmlFor="email" className="text-[15px] font-bold text-gray-700">Email</Label>
                 <Input
                   id="email"
                   name="email"
@@ -36,16 +36,17 @@ export default function Login() {
                   tabIndex={1}
                   autoComplete="email"
                   placeholder="email@example.com"
+                  className="h-13 text-[16px] rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
                 />
                 <InputError messages={errors.email} />
               </div>
 
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password" className="text-[15px] font-bold text-gray-700">Password</Label>
                   <TextLink
                     href={newIdentityPasswordResetPath()}
-                    className="ml-auto text-sm"
+                    className="ml-auto text-[14px] text-[#B8860B] font-medium hover:underline"
                     tabIndex={5}
                   >
                     Forgot password?
@@ -59,25 +60,26 @@ export default function Login() {
                   tabIndex={2}
                   autoComplete="current-password"
                   placeholder="Password"
+                  className="h-13 text-[16px] rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
                 />
                 <InputError messages={errors.password} />
               </div>
 
               <Button
                 type="submit"
-                className="mt-4 w-full"
+                className="mt-2 w-full h-13 bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-xl text-[16px] font-bold"
                 tabIndex={4}
                 disabled={processing}
               >
                 {processing && <Spinner />}
-                Log in
+                Log In
               </Button>
             </div>
 
-            <div className="text-muted-foreground text-center text-sm">
+            <div className="text-center text-[15px] text-gray-500">
               Don&apos;t have an account?{" "}
-              <TextLink href={signUpPath()} tabIndex={5}>
-                Sign up
+              <TextLink href={signUpPath()} tabIndex={5} className="text-[#B8860B] font-bold hover:underline">
+                Sign Up
               </TextLink>
             </div>
           </>

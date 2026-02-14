@@ -12,17 +12,17 @@ import { identityPasswordResetPath, signInPath } from "@/routes"
 export default function ForgotPassword() {
   return (
     <AuthLayout
-      title="Forgot password"
+      title="Forgot Password"
       description="Enter your email to receive a password reset link"
     >
-      <Head title="Forgot password" />
+      <Head title="Forgot Password" />
 
       <div className="space-y-6">
         <Form method="post" action={identityPasswordResetPath()}>
           {({ processing, errors }) => (
             <>
               <div className="grid gap-2">
-                <Label htmlFor="email">Email address</Label>
+                <Label htmlFor="email" className="text-[15px] font-bold text-gray-700">Email Address</Label>
                 <Input
                   id="email"
                   type="email"
@@ -30,22 +30,26 @@ export default function ForgotPassword() {
                   autoComplete="off"
                   autoFocus
                   placeholder="email@example.com"
+                  className="h-13 text-[16px] rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
                 />
                 <InputError messages={errors.email} />
               </div>
 
               <div className="my-6 flex items-center justify-start">
-                <Button className="w-full" disabled={processing}>
+                <Button
+                  className="w-full h-13 bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-xl text-[16px] font-bold"
+                  disabled={processing}
+                >
                   {processing && <Spinner />}
-                  Email password reset link
+                  Send Reset Link
                 </Button>
               </div>
             </>
           )}
         </Form>
-        <div className="text-muted-foreground space-x-1 text-center text-sm">
-          <span>Or, return to</span>
-          <TextLink href={signInPath()}>log in</TextLink>
+        <div className="text-center text-[15px] text-gray-500">
+          <span>Or, return to </span>
+          <TextLink href={signInPath()} className="text-[#B8860B] font-bold hover:underline">Log In</TextLink>
         </div>
       </div>
     </AuthLayout>

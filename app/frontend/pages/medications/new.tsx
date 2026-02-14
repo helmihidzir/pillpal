@@ -3,7 +3,6 @@ import { ArrowLeft, Moon, Sun, Sunrise } from "lucide-react"
 
 import InputError from "@/components/input-error"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,9 +11,9 @@ import AppLayout from "@/layouts/app-layout"
 import { medicationsPath } from "@/routes"
 
 const SCHEDULE_OPTIONS = [
-  { value: "morning", label: "Pagi (Morning)", icon: Sunrise },
-  { value: "afternoon", label: "Petang (Afternoon)", icon: Sun },
-  { value: "evening", label: "Malam (Evening)", icon: Moon },
+  { value: "morning", label: "Pagi", subtitle: "Morning", icon: Sunrise },
+  { value: "afternoon", label: "Petang", subtitle: "Afternoon", icon: Sun },
+  { value: "evening", label: "Malam", subtitle: "Evening", icon: Moon },
 ] as const
 
 export default function NewMedication() {
@@ -22,112 +21,112 @@ export default function NewMedication() {
     <AppLayout>
       <Head title="Add Medication" />
 
-      <div className="mx-auto max-w-2xl px-4 py-6 space-y-6">
+      <div className="mx-auto max-w-2xl px-4 py-8 space-y-6">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={medicationsPath()}>
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-          </Button>
-          <h1 className="text-2xl font-bold text-stone-900">
+          <Link
+            href={medicationsPath()}
+            className="h-12 w-12 rounded-xl bg-white border-2 border-gray-200 hover:bg-gray-50 flex items-center justify-center transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </Link>
+          <h1 className="text-[24px] font-bold text-gray-900">
             Add Medication
           </h1>
         </div>
 
-        <Card>
-          <CardContent className="p-6">
-            <Form
-              method="post"
-              action={medicationsPath()}
-              className="space-y-6"
-            >
-              {({ processing, errors }) => (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-base">
-                      Medication Name *
-                    </Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      type="text"
-                      required
-                      autoFocus
-                      placeholder="e.g. Metformin"
-                      className="text-lg h-12"
-                      disabled={processing}
-                    />
-                    <InputError messages={errors.name} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="dosage" className="text-base">
-                      Dosage
-                    </Label>
-                    <Input
-                      id="dosage"
-                      name="dosage"
-                      type="text"
-                      placeholder="e.g. 500mg"
-                      className="text-lg h-12"
-                      disabled={processing}
-                    />
-                    <InputError messages={errors.dosage} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="instructions" className="text-base">
-                      Instructions
-                    </Label>
-                    <Input
-                      id="instructions"
-                      name="instructions"
-                      type="text"
-                      placeholder="e.g. After food"
-                      className="text-lg h-12"
-                      disabled={processing}
-                    />
-                    <InputError messages={errors.instructions} />
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label className="text-base">
-                      When to take *
-                    </Label>
-                    <div className="grid gap-3">
-                      {SCHEDULE_OPTIONS.map(({ value, label, icon: Icon }) => (
-                        <label
-                          key={value}
-                          className="flex items-center gap-3 rounded-lg border-2 border-stone-200 p-4 cursor-pointer hover:border-emerald-300 hover:bg-emerald-50 transition-colors has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50"
-                        >
-                          <Checkbox
-                            name="schedules[]"
-                            value={value}
-                            className="h-5 w-5"
-                          />
-                          <Icon className="h-5 w-5 text-stone-500" />
-                          <span className="text-base font-medium">
-                            {label}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                    <InputError messages={errors.schedules} />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full h-12 text-base bg-emerald-600 hover:bg-emerald-700"
+        <div className="rounded-2xl bg-white border-2 border-gray-200 p-6 md:p-8">
+          <Form
+            method="post"
+            action={medicationsPath()}
+            className="space-y-6"
+          >
+            {({ processing, errors }) => (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-[15px] font-bold text-gray-700">
+                    Medication Name *
+                  </Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    autoFocus
+                    placeholder="e.g. Metformin"
+                    className="text-[18px] h-14 rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
                     disabled={processing}
-                  >
-                    {processing && <Spinner className="mr-2" />}
-                    Add Medication
-                  </Button>
-                </>
-              )}
-            </Form>
-          </CardContent>
-        </Card>
+                  />
+                  <InputError messages={errors.name} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="dosage" className="text-[15px] font-bold text-gray-700">
+                    Dosage
+                  </Label>
+                  <Input
+                    id="dosage"
+                    name="dosage"
+                    type="text"
+                    placeholder="e.g. 500mg"
+                    className="text-[18px] h-14 rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
+                    disabled={processing}
+                  />
+                  <InputError messages={errors.dosage} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="instructions" className="text-[15px] font-bold text-gray-700">
+                    Instructions
+                  </Label>
+                  <Input
+                    id="instructions"
+                    name="instructions"
+                    type="text"
+                    placeholder="e.g. After food"
+                    className="text-[18px] h-14 rounded-xl border-2 border-gray-300 focus:border-[#B8860B] focus:ring-[#B8860B]"
+                    disabled={processing}
+                  />
+                  <InputError messages={errors.instructions} />
+                </div>
+
+                <div className="space-y-3">
+                  <Label className="text-[15px] font-bold text-gray-700">
+                    When to Take *
+                  </Label>
+                  <div className="grid gap-3">
+                    {SCHEDULE_OPTIONS.map(({ value, label, subtitle, icon: Icon }) => (
+                      <label
+                        key={value}
+                        className="flex items-center gap-4 rounded-xl border-2 border-gray-200 p-5 cursor-pointer hover:border-[#C4954A] transition-colors has-[:checked]:border-[#B8860B] has-[:checked]:bg-[#F5EFE6]"
+                      >
+                        <Checkbox
+                          name="schedules[]"
+                          value={value}
+                          className="h-6 w-6"
+                        />
+                        <Icon className="h-6 w-6 text-gray-500" />
+                        <div>
+                          <span className="text-[17px] font-bold text-gray-900">{label}</span>
+                          <span className="text-[14px] ml-2 text-gray-400">{subtitle}</span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                  <InputError messages={errors.schedules} />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full h-14 text-[17px] font-bold bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-xl"
+                  disabled={processing}
+                >
+                  {processing && <Spinner className="mr-2" />}
+                  Add Medication
+                </Button>
+              </>
+            )}
+          </Form>
+        </div>
       </div>
     </AppLayout>
   )
