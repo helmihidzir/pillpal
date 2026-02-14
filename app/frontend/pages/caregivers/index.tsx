@@ -12,9 +12,9 @@ interface CaregiversPageProps extends SharedProps {
 }
 
 const TIME_CONFIG = {
-  morning: { label: "Pagi", icon: Sunrise },
-  afternoon: { label: "Petang", icon: Sun },
-  evening: { label: "Malam", icon: Moon },
+  morning: { label: "Morning", icon: Sunrise },
+  afternoon: { label: "Afternoon", icon: Sun },
+  evening: { label: "Evening", icon: Moon },
 } as const
 
 function PatientCard({ patient }: { patient: PatientSummary }) {
@@ -22,40 +22,41 @@ function PatientCard({ patient }: { patient: PatientSummary }) {
     patient.total_medications > 0
       ? (patient.taken_medications / patient.total_medications) * 100
       : 0
+  const allDone = percent === 100
 
   return (
-    <div className="rounded-2xl bg-white border-2 border-gray-200 p-6 space-y-5">
+    <div className={`rounded-2xl border-2 p-5 space-y-4 ${allDone ? "bg-white border-[#C4954A]/30" : "bg-white border-gray-200"}`}>
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-[20px] font-bold text-gray-900">
+          <h3 className="text-[18px] font-bold text-gray-900">
             {patient.name}
           </h3>
-          <p className="text-[15px] text-gray-500 mt-0.5">
+          <p className="text-[14px] text-gray-500 mt-0.5">
             {patient.taken_medications} of {patient.total_medications} taken
           </p>
         </div>
         <div
-          className={`h-12 w-12 rounded-xl flex items-center justify-center ${
-            percent === 100
+          className={`h-10 w-10 rounded-lg flex items-center justify-center ${
+            allDone
               ? "bg-[#2D2926] text-white"
               : percent > 0
-                ? "bg-amber-100 text-amber-600"
+                ? "bg-[#C4954A]/15 text-[#B8860B]"
                 : "bg-gray-100 text-gray-400"
           }`}
         >
-          {percent === 100 ? (
-            <CircleCheck className="h-6 w-6" />
+          {allDone ? (
+            <CircleCheck className="h-5 w-5" />
           ) : (
-            <Pill className="h-6 w-6" />
+            <Pill className="h-5 w-5" />
           )}
         </div>
       </div>
 
-      <Progress value={percent} className="h-3 rounded-full" />
+      <Progress value={percent} className="h-2 rounded-full" />
 
-      {patient.medications.map((med) => (
-        <div key={med.id} className="space-y-2">
-          {med.schedules.map((sched) => {
+      <div className="space-y-1">
+        {patient.medications.flatMap((med) =>
+          med.schedules.map((sched) => {
             const config =
               TIME_CONFIG[sched.time_of_day as keyof typeof TIME_CONFIG]
             const Icon = config?.icon || Sun
@@ -64,32 +65,29 @@ function PatientCard({ patient }: { patient: PatientSummary }) {
             return (
               <div
                 key={sched.id}
-                className={`flex items-center gap-3 rounded-xl p-4 ${
-                  isTaken ? "bg-[#F5EFE6] border border-[#D4C4A8]" : "bg-gray-50 border border-gray-200"
-                }`}
+                className="flex items-center gap-2.5 py-2 px-2.5 rounded-lg"
               >
-                <Icon className={`h-5 w-5 shrink-0 ${isTaken ? "text-[#B8860B]" : "text-gray-400"}`} />
+                {isTaken ? (
+                  <Check className="h-4 w-4 shrink-0 text-[#B8860B]" strokeWidth={3} />
+                ) : (
+                  <Icon className="h-4 w-4 shrink-0 text-gray-300" />
+                )}
                 <span
-                  className={`flex-1 text-[16px] font-medium ${isTaken ? "text-[#2D2926] line-through" : "text-gray-900"}`}
+                  className={`flex-1 text-[14px] truncate ${isTaken ? "text-gray-400 line-through" : "text-gray-900 font-medium"}`}
                 >
                   {med.name}
                   {med.dosage && (
-                    <span className={`ml-1.5 font-normal ${isTaken ? "text-[#B8860B]" : "text-gray-400"}`}>
-                      ({med.dosage})
-                    </span>
+                    <span className="text-gray-400 font-normal"> {med.dosage}</span>
                   )}
                 </span>
-                <span className={`text-[13px] font-bold ${isTaken ? "text-[#B8860B]" : "text-gray-400"}`}>
+                <span className={`text-[12px] shrink-0 ${isTaken ? "text-gray-300" : "text-gray-400"}`}>
                   {config?.label}
                 </span>
-                {isTaken && (
-                  <Check className="h-5 w-5 shrink-0 text-[#B8860B]" strokeWidth={3} />
-                )}
               </div>
             )
-          })}
-        </div>
-      ))}
+          }),
+        )}
+      </div>
     </div>
   )
 }
@@ -106,9 +104,9 @@ function EmptyState() {
       <p className="text-[16px] text-gray-500 mb-8">
         Enter your family member's share code to start monitoring
       </p>
-      <Button asChild className="bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-xl px-6 h-14 text-[16px] font-bold">
+      <Button asChild className="bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-xl px-6 h-14 text-[16px] font-bold inline-flex items-center justify-center gap-2">
         <Link href={newCaregiverPath()}>
-          <UserPlus className="h-5 w-5 mr-2" />
+          <UserPlus className="h-5 w-5" />
           Link a Patient
         </Link>
       </Button>
@@ -123,35 +121,38 @@ export default function CaregiversIndex() {
     <AppLayout>
       <Head title="Caregiver Dashboard" />
 
-      <div className="mx-auto max-w-2xl px-4 py-8 space-y-6">
-        <div>
-          <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
-            Your Patients
-          </h1>
-          <p className="text-[16px] text-gray-500 mt-1">
-            Monitor medication compliance
-          </p>
+      <div className="mx-auto max-w-6xl px-4 py-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
+              Your Patients
+            </h1>
+            <p className="text-[16px] text-gray-500 mt-1">
+              Monitor medication compliance
+            </p>
+          </div>
+          {patients.length > 0 && (
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-xl h-12 px-5 text-[15px] font-bold border-2 border-gray-300 hover:bg-gray-50 hover:border-[#C4954A] inline-flex items-center justify-center gap-2"
+            >
+              <Link href={newCaregiverPath()}>
+                <UserPlus className="h-5 w-5" />
+                Link Patient
+              </Link>
+            </Button>
+          )}
         </div>
 
         {patients.length === 0 ? (
           <EmptyState />
         ) : (
-          <>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {patients.map((patient) => (
               <PatientCard key={patient.id} patient={patient} />
             ))}
-
-            <Button
-              asChild
-              variant="outline"
-              className="w-full rounded-xl h-14 text-[16px] font-bold border-2 border-dashed border-gray-300 hover:bg-gray-50 hover:border-[#C4954A]"
-            >
-              <Link href={newCaregiverPath()}>
-                <UserPlus className="h-5 w-5 mr-2" />
-                Link Another Patient
-              </Link>
-            </Button>
-          </>
+          </div>
         )}
       </div>
     </AppLayout>

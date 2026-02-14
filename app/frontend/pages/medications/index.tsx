@@ -34,11 +34,18 @@ const TIME_CONFIG = {
   evening: { label: "Evening", icon: Moon, order: 2 },
 } as const
 
-function getGreeting(name: string) {
+function getCurrentTimeOfDay() {
   const hour = new Date().getHours()
+  if (hour < 12) return "morning"
+  if (hour < 18) return "afternoon"
+  return "evening"
+}
+
+function getGreeting(name: string) {
   const firstName = name.split(" ")[0]
-  if (hour < 12) return `Good Morning, ${firstName}!`
-  if (hour < 18) return `Good Afternoon, ${firstName}!`
+  const time = getCurrentTimeOfDay()
+  if (time === "morning") return `Good Morning, ${firstName}!`
+  if (time === "afternoon") return `Good Afternoon, ${firstName}!`
   return `Good Evening, ${firstName}!`
 }
 
@@ -136,7 +143,7 @@ function MedicationCard({
   )
 }
 
-function ShareCodeCard({ code }: { code: string }) {
+function ShareCodeBadge({ code }: { code: string }) {
   function handleCopy() {
     navigator.clipboard.writeText(code)
     toast("Code copied!", {
@@ -145,27 +152,15 @@ function ShareCodeCard({ code }: { code: string }) {
   }
 
   return (
-    <div className="rounded-2xl bg-white border-2 border-gray-200 p-5">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-[14px] font-bold text-gray-500 mb-1">
-            Your Share Code
-          </p>
-          <span className="text-[28px] font-bold tracking-[0.15em] text-gray-900 font-mono">
-            {code}
-          </span>
-        </div>
-        <button
-          onClick={handleCopy}
-          className="h-12 w-12 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors active:scale-95"
-        >
-          <Copy className="h-5 w-5 text-gray-600" />
-        </button>
-      </div>
-      <p className="text-[14px] text-gray-500 mt-2">
-        Give this code to your caregiver so they can monitor your medications
-      </p>
-    </div>
+    <button
+      onClick={handleCopy}
+      className="inline-flex items-center gap-2 rounded-xl bg-white border border-gray-200 px-3.5 py-2 hover:bg-gray-50 active:scale-[0.97] transition-all"
+      title="Click to copy share code"
+    >
+      <span className="text-[13px] text-gray-500">Share Code</span>
+      <span className="text-[14px] font-bold font-mono tracking-wider text-gray-900">{code}</span>
+      <Copy className="h-3.5 w-3.5 text-gray-400" />
+    </button>
   )
 }
 
@@ -235,9 +230,12 @@ export default function MedicationsIndex() {
       <div className="mx-auto max-w-2xl px-4 py-8 space-y-6">
         {/* Greeting */}
         <div>
-          <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
-            {getGreeting(auth.user.name)}
-          </h1>
+          <div className="flex items-center justify-between gap-4">
+            <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
+              {getGreeting(auth.user.name)}
+            </h1>
+            {share_code && <ShareCodeBadge code={share_code} />}
+          </div>
           <p className="text-[16px] text-gray-500 mt-1">
             {new Date().toLocaleDateString("en-MY", {
               weekday: "long",
@@ -269,9 +267,6 @@ export default function MedicationsIndex() {
           </div>
         )}
 
-        {/* Share Code */}
-        {share_code && <ShareCodeCard code={share_code} />}
-
         {/* Medications */}
         {medications.length === 0 ? (
           <EmptyState />
@@ -280,12 +275,21 @@ export default function MedicationsIndex() {
             {sortedTimes.map((time) => {
               const config = TIME_CONFIG[time as keyof typeof TIME_CONFIG]
               const Icon = config?.icon || Sun
+              const isCurrent = time === getCurrentTimeOfDay()
               return (
-                <div key={time} className="space-y-3">
+                <div
+                  key={time}
+                  className={`space-y-3 rounded-2xl p-4 -mx-4 transition-colors ${
+                    isCurrent
+                      ? "bg-white border-2 border-[#C4954A]/30"
+                      : ""
+                  }`}
+                >
                   <div className="flex items-center gap-2.5 px-1">
-                    <Icon className="h-5 w-5 text-gray-400" />
-                    <h2 className="text-[16px] font-bold text-gray-500">
+                    <Icon className={`h-5 w-5 ${isCurrent ? "text-[#B8860B]" : "text-gray-400"}`} />
+                    <h2 className={`text-[16px] font-bold ${isCurrent ? "text-[#B8860B]" : "text-gray-500"}`}>
                       {config?.label || time}
+                      {isCurrent && <span className="ml-2 text-[12px] font-medium text-[#C4954A]">Now</span>}
                     </h2>
                   </div>
                   {grouped[time].map(({ medication, schedule }) => (
