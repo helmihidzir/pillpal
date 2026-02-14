@@ -38,18 +38,22 @@ function CameraCapture({
 
   const startCamera = useCallback(async () => {
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setError("Camera not supported on this browser. Please enter details manually.")
+        return
+      }
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
+        video: { facingMode: { ideal: "environment" } },
       })
       if (videoRef.current) {
         videoRef.current.srcObject = stream
+        await videoRef.current.play()
         setStreaming(true)
         setError(null)
       }
-    } catch {
-      setError(
-        "Camera access denied. Please allow camera access or enter details manually.",
-      )
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error"
+      setError(`Camera error: ${message}. Please allow camera access or enter details manually.`)
     }
   }, [])
 

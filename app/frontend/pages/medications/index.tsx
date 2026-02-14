@@ -230,20 +230,20 @@ export default function MedicationsIndex() {
       <div className="mx-auto max-w-2xl px-4 py-8 space-y-6">
         {/* Greeting */}
         <div>
-          <div className="flex items-center justify-between gap-4">
-            <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
-              {getGreeting(auth.user.name)}
-            </h1>
+          <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
+            {getGreeting(auth.user.name)}
+          </h1>
+          <div className="flex items-center justify-between gap-3 mt-1">
+            <p className="text-[16px] text-gray-500">
+              {new Date().toLocaleDateString("en-MY", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
             {share_code && <ShareCodeBadge code={share_code} />}
           </div>
-          <p className="text-[16px] text-gray-500 mt-1">
-            {new Date().toLocaleDateString("en-MY", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </p>
         </div>
 
         {/* Progress */}
