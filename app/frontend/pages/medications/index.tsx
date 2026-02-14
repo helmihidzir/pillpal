@@ -1,5 +1,6 @@
 import { Head, Link, router, usePage } from "@inertiajs/react"
 import {
+  Camera,
   Check,
   CirclePlus,
   Copy,
@@ -7,7 +8,6 @@ import {
   Pill,
   Sun,
   Sunrise,
-  Undo2,
 } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
@@ -18,8 +18,8 @@ import { Progress } from "@/components/ui/progress"
 import AppLayout from "@/layouts/app-layout"
 import {
   medicationLogPath,
-  medicationPath,
   newMedicationPath,
+  newMedicineScanPath,
 } from "@/routes"
 import type { Medication, SharedProps } from "@/types"
 
@@ -177,12 +177,20 @@ function EmptyState() {
         <p className="text-stone-500 mb-4">
           Add your first medication to start tracking
         </p>
-        <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
-          <Link href={newMedicationPath()}>
-            <CirclePlus className="h-5 w-5 mr-2" />
-            Add Medication
-          </Link>
-        </Button>
+        <div className="flex gap-3">
+          <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
+            <Link href={newMedicineScanPath()}>
+              <Camera className="h-5 w-5 mr-2" />
+              Scan Medicine
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href={newMedicationPath()}>
+              <CirclePlus className="h-5 w-5 mr-2" />
+              Add Manually
+            </Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )
@@ -284,15 +292,24 @@ export default function MedicationsIndex() {
               )
             })}
 
-            <div className="pt-4">
+            <div className="pt-4 flex gap-3">
+              <Button
+                asChild
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+              >
+                <Link href={newMedicineScanPath()}>
+                  <Camera className="h-5 w-5 mr-2" />
+                  Scan Medicine
+                </Link>
+              </Button>
               <Button
                 asChild
                 variant="outline"
-                className="w-full border-dashed border-2"
+                className="flex-1"
               >
                 <Link href={newMedicationPath()}>
                   <CirclePlus className="h-5 w-5 mr-2" />
-                  Add Another Medication
+                  Add Manually
                 </Link>
               </Button>
             </div>

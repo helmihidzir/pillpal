@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :medications, only: [:index, :new, :create, :destroy]
   resources :medication_logs, only: [:update]
   resources :caregivers, only: [:index, :new, :create]
+  resources :medicine_scans, only: [:new, :create]
 
   get :dashboard, to: "dashboard#index"
 
