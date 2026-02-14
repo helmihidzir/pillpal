@@ -2,6 +2,7 @@ import { Form, Head, Link, router, usePage } from "@inertiajs/react"
 import { ArrowLeft, Camera, Keyboard, Loader2, RotateCcw } from "lucide-react"
 import { useCallback, useRef, useState } from "react"
 
+
 import InputError from "@/components/input-error"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,92 +32,50 @@ function CameraCapture({
 }: {
   onCapture: (base64: string) => void
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [streaming, setStreaming] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [preview, setPreview] = useState<string | null>(null)
 
-  const startCamera = useCallback(async () => {
-    try {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        setError("Camera not supported on this browser. Please enter details manually.")
-        return
-      }
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" } },
-      })
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-        await videoRef.current.play()
-        setStreaming(true)
-        setError(null)
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown error"
-      setError(`Camera error: ${message}. Please allow camera access or enter details manually.`)
+  const handleFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = reader.result as string
+      setPreview(result)
+      const base64 = result.split(",")[1]
+      onCapture(base64)
     }
-  }, [])
-
-  const capturePhoto = useCallback(() => {
-    const video = videoRef.current
-    const canvas = canvasRef.current
-    if (!video || !canvas) return
-
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
-    const ctx = canvas.getContext("2d")
-    ctx?.drawImage(video, 0, 0)
-
-    const base64 = canvas.toDataURL("image/jpeg", 0.8).split(",")[1]
-
-    const stream = video.srcObject as MediaStream
-    stream?.getTracks().forEach((track) => track.stop())
-    setStreaming(false)
-
-    onCapture(base64)
+    reader.readAsDataURL(file)
   }, [onCapture])
 
   return (
     <div className="space-y-4">
-      {error && (
-        <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-[15px] font-medium text-red-700">
-          {error}
-        </div>
-      )}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={handleFile}
+        className="hidden"
+      />
 
-      {!streaming ? (
+      {preview ? (
+        <div className="rounded-2xl overflow-hidden">
+          <img src={preview} alt="Captured" className="w-full" />
+        </div>
+      ) : (
         <button
           type="button"
-          onClick={startCamera}
+          onClick={() => fileInputRef.current?.click()}
           className="w-full h-52 rounded-2xl border-3 border-dashed border-gray-300 hover:border-[#C4954A] bg-gray-50 flex flex-col items-center justify-center gap-4 transition-colors active:scale-[0.98]"
         >
           <div className="h-16 w-16 rounded-2xl bg-[#2D2926] flex items-center justify-center">
             <Camera className="h-8 w-8 text-white" />
           </div>
-          <span className="text-[17px] font-bold text-gray-600">Tap to Open Camera</span>
+          <span className="text-[17px] font-bold text-gray-600">Take Photo or Upload</span>
         </button>
-      ) : (
-        <div className="space-y-3">
-          <div className="relative rounded-2xl overflow-hidden bg-black">
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className="w-full"
-            />
-          </div>
-          <Button
-            type="button"
-            onClick={capturePhoto}
-            className="w-full h-14 text-[17px] font-bold bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-xl"
-          >
-            <Camera className="h-5 w-5 mr-2" />
-            Capture Photo
-          </Button>
-        </div>
       )}
-
-      <canvas ref={canvasRef} className="hidden" />
     </div>
   )
 }

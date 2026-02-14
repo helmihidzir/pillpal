@@ -122,37 +122,36 @@ export default function CaregiversIndex() {
       <Head title="Caregiver Dashboard" />
 
       <div className="mx-auto max-w-6xl px-4 py-8 space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
-              Your Patients
-            </h1>
-            <p className="text-[16px] text-gray-500 mt-1">
-              Monitor medication compliance
-            </p>
-          </div>
-          {patients.length > 0 && (
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-xl h-12 px-5 text-[15px] font-bold border-2 border-gray-300 hover:bg-gray-50 hover:border-[#C4954A] inline-flex items-center justify-center gap-2"
-            >
-              <Link href={newCaregiverPath()}>
-                <UserPlus className="h-5 w-5" />
-                Link Patient
-              </Link>
-            </Button>
-          )}
+        <div>
+          <h1 className="text-[28px] md:text-[32px] font-bold text-gray-900">
+            Your Patients
+          </h1>
+          <p className="text-[16px] text-gray-500 mt-1">
+            Monitor medication compliance
+          </p>
         </div>
 
         {patients.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {patients.map((patient) => (
-              <PatientCard key={patient.id} patient={patient} />
-            ))}
-          </div>
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {patients.map((patient) => (
+                <PatientCard key={patient.id} patient={patient} />
+              ))}
+            </div>
+
+            <Button
+              asChild
+              variant="outline"
+              className="w-full md:w-auto rounded-xl h-12 px-5 text-[15px] font-bold border-2 border-dashed border-gray-300 hover:bg-gray-50 hover:border-[#C4954A] inline-flex items-center justify-center gap-2"
+            >
+              <Link href={newCaregiverPath()}>
+                <UserPlus className="h-5 w-5" />
+                Link Another Patient
+              </Link>
+            </Button>
+          </>
         )}
       </div>
     </AppLayout>
