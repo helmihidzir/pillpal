@@ -29,26 +29,26 @@ export default function Welcome() {
       <div className="flex min-h-screen flex-col bg-[#FAF6EE]">
         <main className="flex-1">
           {/* Hero with nav — hims style */}
-          <section className="px-6 pb-12 md:pb-16">
+          <section className="px-4 md:px-6 pb-12 md:pb-16 overflow-hidden">
             {/* Nav */}
             <div className="max-w-6xl mx-auto flex items-center justify-between py-4">
               <Link href="/" className="flex items-center gap-2.5">
-                <div className="bg-[#2D2926] text-white flex size-10 items-center justify-center rounded-xl">
+                <div className="bg-[#2D2926] text-white flex size-10 items-center justify-center rounded-xl shrink-0">
                   <AppLogoIcon className="size-5" />
                 </div>
                 <span className="text-[20px] font-bold text-[#2D2926]">PillPal</span>
               </Link>
-              <nav className="flex items-center gap-2">
+              <nav className="flex items-center gap-1.5 shrink-0">
                 {auth?.user ? (
-                  <Button asChild className="bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-full px-7 h-12 text-[16px] font-semibold">
+                  <Button asChild className="bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-full px-5 h-11 text-[15px] font-semibold">
                     <Link href={medicationsPath()}>Dashboard</Link>
                   </Button>
                 ) : (
                   <>
-                    <Button variant="ghost" asChild className="text-[#2D2926] hover:bg-[#2D2926]/5 rounded-full h-12 px-5 text-[16px] font-medium">
+                    <Button variant="ghost" asChild className="text-[#2D2926] hover:bg-[#2D2926]/5 rounded-full h-11 px-4 text-[15px] font-medium">
                       <Link href={signInPath()}>Log In</Link>
                     </Button>
-                    <Button asChild className="bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-full px-7 h-12 text-[16px] font-semibold">
+                    <Button asChild className="bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-full px-5 h-11 text-[15px] font-semibold">
                       <Link href={signUpPath()}>Get Started</Link>
                     </Button>
                   </>
