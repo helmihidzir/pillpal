@@ -1,4 +1,6 @@
 import { Form, Head } from "@inertiajs/react"
+import { Heart, Pill } from "lucide-react"
+import { useState } from "react"
 
 import InputError from "@/components/input-error"
 import TextLink from "@/components/text-link"
@@ -10,6 +12,8 @@ import AuthLayout from "@/layouts/auth-layout"
 import { signInPath, signUpPath } from "@/routes"
 
 export default function Register() {
+  const [role, setRole] = useState<"patient" | "caregiver">("patient")
+
   return (
     <AuthLayout
       title="Create an account"
@@ -26,6 +30,50 @@ export default function Register() {
         {({ processing, errors }) => (
           <>
             <div className="grid gap-6">
+              {/* Role Selection */}
+              <div className="grid gap-2">
+                <Label className="text-sm">I am a...</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setRole("patient")}
+                    className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-colors ${
+                      role === "patient"
+                        ? "border-emerald-500 bg-emerald-50"
+                        : "border-stone-200 hover:border-stone-300"
+                    }`}
+                  >
+                    <Pill
+                      className={`h-6 w-6 ${role === "patient" ? "text-emerald-600" : "text-stone-400"}`}
+                    />
+                    <span
+                      className={`text-sm font-medium ${role === "patient" ? "text-emerald-700" : "text-stone-600"}`}
+                    >
+                      Patient
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole("caregiver")}
+                    className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-colors ${
+                      role === "caregiver"
+                        ? "border-emerald-500 bg-emerald-50"
+                        : "border-stone-200 hover:border-stone-300"
+                    }`}
+                  >
+                    <Heart
+                      className={`h-6 w-6 ${role === "caregiver" ? "text-emerald-600" : "text-stone-400"}`}
+                    />
+                    <span
+                      className={`text-sm font-medium ${role === "caregiver" ? "text-emerald-700" : "text-stone-600"}`}
+                    >
+                      Caregiver
+                    </span>
+                  </button>
+                </div>
+                <input type="hidden" name="role" value={role} />
+              </div>
+
               <div className="grid gap-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
@@ -84,7 +132,7 @@ export default function Register() {
                 <InputError messages={errors.password_confirmation} />
               </div>
 
-              <Button type="submit" className="mt-2 w-full" tabIndex={5}>
+              <Button type="submit" className="mt-2 w-full bg-emerald-600 hover:bg-emerald-700" tabIndex={5}>
                 {processing && <Spinner />}
                 Create account
               </Button>
