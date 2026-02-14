@@ -1,125 +1,126 @@
 import { Head, Link, usePage } from "@inertiajs/react"
+import { Camera, Heart, Pill, Shield } from "lucide-react"
 
 import AppLogoIcon from "@/components/app-logo-icon"
-import { dashboardPath, signInPath } from "@/routes"
+import { Button } from "@/components/ui/button"
+import { medicationsPath, signInPath, signUpPath } from "@/routes"
 
 export default function Welcome() {
-  const page = usePage()
-  const { auth } = page.props
+  const { auth } = usePage().props as { auth?: { user?: unknown } }
 
   return (
     <>
-      <Head title="Welcome">
-        <link rel="preconnect" href="https://fonts.bunny.net" />
-        <link
-          href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600"
-          rel="stylesheet"
-        />
-      </Head>
+      <Head title="PillPal - Medication Reminder for Malaysians" />
 
-      <div className="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]">
-        <header className="mb-6 w-full max-w-[335px] text-sm not-has-[nav]:hidden lg:max-w-4xl">
-          <nav className="flex items-center justify-end gap-4">
-            {auth.user ? (
-              <Link
-                href={dashboardPath()}
-                className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-              >
-                Dashboard
-              </Link>
+      <div className="flex min-h-screen flex-col bg-stone-50">
+        {/* Header */}
+        <header className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full">
+          <div className="flex items-center gap-2">
+            <div className="bg-emerald-600 text-white flex size-9 items-center justify-center rounded-lg">
+              <AppLogoIcon className="size-5" />
+            </div>
+            <span className="text-xl font-bold text-stone-900">PillPal</span>
+          </div>
+          <nav className="flex items-center gap-3">
+            {auth?.user ? (
+              <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
+                <Link href={medicationsPath()}>Go to Dashboard</Link>
+              </Button>
             ) : (
               <>
-                <Link
-                  href={signInPath()}
-                  className="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                >
-                  Log in
-                </Link>
+                <Button variant="ghost" asChild>
+                  <Link href={signInPath()}>Log in</Link>
+                </Button>
+                <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
+                  <Link href={signUpPath()}>Sign up</Link>
+                </Button>
               </>
             )}
           </nav>
         </header>
 
-        <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
-          <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
-            <div className="flex-1 rounded-br-lg rounded-bl-lg bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-tl-lg lg:rounded-br-none lg:p-20 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-              <h1 className="mb-1 font-medium">
-                {import.meta.env.VITE_APP_NAME ?? "React Starter Kit"}
-              </h1>
-              <p className="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
-                Rails + Inertia.js + React + shadcn/ui
-                <br />
-                Here are some resources to begin:
+        {/* Hero */}
+        <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+          <div className="max-w-2xl space-y-6">
+            <div className="inline-flex items-center rounded-full bg-emerald-100 px-4 py-1.5 text-sm font-medium text-emerald-700">
+              <Pill className="h-4 w-4 mr-2" />
+              Built for Malaysian families
+            </div>
+
+            <h1 className="text-4xl font-bold tracking-tight text-stone-900 sm:text-5xl">
+              Never miss a dose.
+              <br />
+              <span className="text-emerald-600">Keep family connected.</span>
+            </h1>
+
+            <p className="text-lg text-stone-600 max-w-xl mx-auto">
+              PillPal helps elderly Malaysians track their medications, while
+              giving caregivers peace of mind that their loved ones are taking
+              their medicine on time.
+            </p>
+
+            <div className="flex gap-4 justify-center">
+              <Button
+                asChild
+                size="lg"
+                className="bg-emerald-600 hover:bg-emerald-700 text-base h-12 px-8"
+              >
+                <Link href={signUpPath()}>Get Started Free</Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Features */}
+          <div className="grid gap-6 sm:grid-cols-3 max-w-4xl mx-auto mt-16">
+            <div className="rounded-xl bg-white p-6 shadow-sm border border-stone-100">
+              <div className="h-10 w-10 rounded-lg bg-emerald-100 flex items-center justify-center mb-4">
+                <Pill className="h-5 w-5 text-emerald-600" />
+              </div>
+              <h3 className="font-semibold text-stone-900 mb-2">
+                Simple Reminders
+              </h3>
+              <p className="text-sm text-stone-500">
+                Track morning, afternoon, and evening medications with one tap.
+                Large buttons designed for elderly users.
               </p>
-
-              <ul className="mb-4 flex flex-col lg:mb-6">
-                {[
-                  {
-                    text: "Inertia Rails Docs",
-                    href: "https://inertia-rails.dev",
-                  },
-                  {
-                    text: "shadcn/ui Components",
-                    href: "https://ui.shadcn.com",
-                  },
-                  {
-                    text: "React Docs",
-                    href: "https://react.dev",
-                  },
-                  {
-                    text: "Rails Guides",
-                    href: "https://guides.rubyonrails.org",
-                  },
-                ].map((resource, index) => (
-                  <ResourceItem key={index} {...resource} />
-                ))}
-              </ul>
-
-              <ul className="flex gap-3 text-sm leading-normal">
-                <li>
-                  <a
-                    href="https://inertia-rails.dev"
-                    target="_blank"
-                    className="inline-block rounded-sm border border-black bg-[#1b1b18] px-5 py-1.5 text-sm leading-normal text-white hover:border-black hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:border-white dark:hover:bg-white"
-                    rel="noreferrer"
-                  >
-                    Learn More
-                  </a>
-                </li>
-              </ul>
             </div>
 
-            <div className="relative -mb-px aspect-[335/376] w-full shrink-0 overflow-hidden rounded-t-lg bg-[#D30001] p-10 text-white lg:mb-0 lg:-ml-px lg:aspect-auto lg:w-[438px] lg:rounded-t-none lg:rounded-r-lg">
-              <AppLogoIcon className="h-full w-full" />
+            <div className="rounded-xl bg-white p-6 shadow-sm border border-stone-100">
+              <div className="h-10 w-10 rounded-lg bg-emerald-100 flex items-center justify-center mb-4">
+                <Heart className="h-5 w-5 text-emerald-600" />
+              </div>
+              <h3 className="font-semibold text-stone-900 mb-2">
+                Caregiver Dashboard
+              </h3>
+              <p className="text-sm text-stone-500">
+                Family members can monitor medication compliance remotely. Get
+                peace of mind even when you're in another city.
+              </p>
             </div>
-          </main>
-        </div>
+
+            <div className="rounded-xl bg-white p-6 shadow-sm border border-stone-100">
+              <div className="h-10 w-10 rounded-lg bg-emerald-100 flex items-center justify-center mb-4">
+                <Camera className="h-5 w-5 text-emerald-600" />
+              </div>
+              <h3 className="font-semibold text-stone-900 mb-2">
+                AI Medicine Scan
+              </h3>
+              <p className="text-sm text-stone-500">
+                Snap a photo of your medicine label and let AI extract the
+                details automatically. Supports English and Bahasa Melayu.
+              </p>
+            </div>
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="py-6 text-center text-sm text-stone-400">
+          <p>
+            PillPal &mdash; Built for Krackathon Q1 2026. Solving healthcare
+            for Malaysian families.
+          </p>
+        </footer>
       </div>
     </>
-  )
-}
-
-function ResourceItem({ text, href }: { text: string; href: string }) {
-  return (
-    <li className="relative flex items-center gap-4 py-2">
-      <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#e3e3e0] bg-[#FDFDFC] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] dark:border-[#3E3E3A] dark:bg-[#161615]">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A]" />
-      </span>
-      <a
-        href={href}
-        target="_blank"
-        className="inline-flex items-center space-x-1 font-medium text-[#f53003] underline underline-offset-4 dark:text-[#FF4433]"
-        rel="noreferrer"
-      >
-        <span>{text}</span>
-        <svg width={10} height={11} viewBox="0 0 10 11" className="h-2.5 w-2.5">
-          <path
-            d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001"
-            stroke="currentColor"
-            strokeLinecap="square"
-          />
-        </svg>
-      </a>
-    </li>
   )
 }

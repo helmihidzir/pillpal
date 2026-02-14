@@ -1,5 +1,5 @@
-import { Link } from "@inertiajs/react"
-import { BookOpen, Folder, LayoutGrid } from "lucide-react"
+import { Link, usePage } from "@inertiajs/react"
+import { Camera, Heart, Pill, Settings } from "lucide-react"
 
 import { NavFooter } from "@/components/nav-footer"
 import { NavMain } from "@/components/nav-main"
@@ -13,40 +13,57 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { dashboardPath } from "@/routes"
-import type { NavItem } from "@/types"
+import {
+  caregiversPath,
+  medicationsPath,
+  newMedicineScanPath,
+  settingsProfilePath,
+} from "@/routes"
+import type { NavItem, SharedProps } from "@/types"
 
 import AppLogo from "./app-logo"
 
-const mainNavItems: NavItem[] = [
+const patientNavItems: NavItem[] = [
   {
-    title: "Dashboard",
-    href: dashboardPath(),
-    icon: LayoutGrid,
+    title: "My Medications",
+    href: medicationsPath(),
+    icon: Pill,
+  },
+  {
+    title: "Scan Medicine",
+    href: newMedicineScanPath(),
+    icon: Camera,
+  },
+]
+
+const caregiverNavItems: NavItem[] = [
+  {
+    title: "My Patients",
+    href: caregiversPath(),
+    icon: Heart,
   },
 ]
 
 const footerNavItems: NavItem[] = [
   {
-    title: "Repository",
-    href: "https://github.com/inertia-rails/react-starter-kit",
-    icon: Folder,
-  },
-  {
-    title: "Documentation",
-    href: "https://inertia-rails.dev",
-    icon: BookOpen,
+    title: "Settings",
+    href: settingsProfilePath(),
+    icon: Settings,
   },
 ]
 
 export function AppSidebar() {
+  const { auth } = usePage<SharedProps>().props
+  const isCaregiver = auth.user.role === "caregiver"
+  const homePath = isCaregiver ? caregiversPath() : medicationsPath()
+
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href={dashboardPath()} prefetch>
+              <Link href={homePath} prefetch>
                 <AppLogo />
               </Link>
             </SidebarMenuButton>
@@ -55,7 +72,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={mainNavItems} />
+        <NavMain items={isCaregiver ? caregiverNavItems : patientNavItems} />
       </SidebarContent>
 
       <SidebarFooter>
