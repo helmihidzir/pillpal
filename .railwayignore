@@ -1,0 +1,6 @@
+.overmind.sock
+.env*
+storage/
+tmp/
+log/
+node_modules/

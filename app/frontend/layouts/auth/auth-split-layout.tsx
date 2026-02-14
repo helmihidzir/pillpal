@@ -17,22 +17,21 @@ export default function AuthSplitLayout({
   return (
     <div className="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="bg-muted relative hidden h-full flex-col p-10 text-white lg:flex dark:border-r">
-        <div className="absolute inset-0 bg-zinc-900" />
+        <div className="absolute inset-0 bg-emerald-900" />
         <Link
           href={rootPath()}
           className="relative z-20 flex items-center text-lg font-medium"
         >
           <AppLogoIcon className="mr-2 size-8 fill-current text-white" />
-          {import.meta.env.VITE_APP_NAME ?? "React Starter Kit"}
+          PillPal
         </Link>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              &ldquo;The One Person Framework. A toolkit so powerful that it
-              allows a single individual to create modern applications upon
-              which they might build a competitive business.&rdquo;
+              &ldquo;Never miss a dose. Keep your family connected and your
+              loved ones healthy.&rdquo;
             </p>
-            <footer className="text-sm text-neutral-300">DHH</footer>
+            <footer className="text-sm text-emerald-300">PillPal</footer>
           </blockquote>
         </div>
       </div>
