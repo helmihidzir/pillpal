@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     resource :password_reset,     only: [:new, :edit, :create, :update]
   end
 
-  resources :medications, only: [:index, :new, :create, :destroy]
+  resources :medications, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :medication_logs, only: [:update]
   resources :caregivers, only: [:index, :new, :create]
   resources :medicine_scans, only: [:new, :create]

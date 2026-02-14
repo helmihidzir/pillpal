@@ -30,6 +30,42 @@ class MedicationsController < InertiaController
     redirect_to new_medication_path, inertia: {errors: medication.errors}
   end
 
+  def edit
+    medication = Current.user.medications.includes(:medication_schedules).find(params[:id])
+    render inertia: {
+      medication: {
+        id: medication.id,
+        name: medication.name,
+        dosage: medication.dosage,
+        instructions: medication.instructions,
+        schedules: medication.medication_schedules.map(&:time_of_day)
+      }
+    }
+  end
+
+  def update
+    medication = Current.user.medications.find(params[:id])
+    schedules = medication_params[:schedules] || []
+
+    if schedules.empty?
+      redirect_to edit_medication_path(medication), inertia: {errors: {schedules: "Please select at least one time"}}
+      return
+    end
+
+    Medication.transaction do
+      medication.update!(medication_params.except(:schedules))
+      medication.medication_schedules.where.not(time_of_day: schedules).destroy_all
+      schedules.each do |time|
+        medication.medication_schedules.find_or_create_by!(time_of_day: time)
+      end
+      medication.ensure_today_logs!
+    end
+
+    redirect_to medications_path, notice: "Medication updated successfully"
+  rescue ActiveRecord::RecordInvalid
+    redirect_to edit_medication_path(medication), inertia: {errors: medication.errors}
+  end
+
   def destroy
     medication = Current.user.medications.find(params[:id])
     medication.destroy!

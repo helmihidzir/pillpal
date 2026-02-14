@@ -5,19 +5,25 @@ import {
   CircleCheck,
   CirclePlus,
   Copy,
+  EllipsisVertical,
   Moon,
+  Pencil,
   Pill,
   Sun,
   Sunrise,
+  Trash2,
 } from "lucide-react"
 import { useState } from "react"
+
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import AppLayout from "@/layouts/app-layout"
 import {
+  editMedicationPath,
   medicationLogPath,
+  medicationPath,
   newMedicationPath,
   newMedicineScanPath,
 } from "@/routes"
@@ -47,6 +53,67 @@ function getGreeting(name: string) {
   if (time === "morning") return `Good Morning, ${firstName}!`
   if (time === "afternoon") return `Good Afternoon, ${firstName}!`
   return `Good Evening, ${firstName}!`
+}
+
+function MedicationMenu({
+  medication,
+}: {
+  medication: Medication
+}) {
+  const [open, setOpen] = useState(false)
+
+  function handleDelete() {
+    setOpen(false)
+    if (confirm(`Delete "${medication.name}"? This cannot be undone.`)) {
+      router.delete(medicationPath(medication.id), {
+        preserveScroll: true,
+      })
+    }
+  }
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation()
+          setOpen(!open)
+        }}
+        className="h-9 w-9 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+      >
+        <EllipsisVertical className="h-5 w-5" />
+      </button>
+      {open && (
+        <>
+          <div
+            className="fixed inset-0 z-10"
+            onClick={() => setOpen(false)}
+          />
+          <div className="absolute right-0 top-full mt-1 z-20 bg-white rounded-xl border border-gray-200 shadow-lg py-1 min-w-[140px]">
+            <Link
+              href={editMedicationPath(medication.id)}
+              className="flex items-center gap-2.5 px-4 py-2.5 text-[15px] text-gray-700 hover:bg-gray-50 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Pencil className="h-4 w-4" />
+              Edit
+            </Link>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                handleDelete()
+              }}
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[15px] text-red-600 hover:bg-red-50 transition-colors"
+            >
+              <Trash2 className="h-4 w-4" />
+              Delete
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  )
 }
 
 function MedicationCard({
@@ -98,48 +165,53 @@ function MedicationCard({
   }
 
   return (
-    <button
-      onClick={handleToggle}
-      className={`w-full flex items-center gap-4 rounded-2xl p-5 transition-all text-left ${
-        isTaken
-          ? "bg-[#F5EFE6] border-2 border-[#C4954A]"
-          : "bg-white border-2 border-gray-200 hover:border-[#C4954A] active:scale-[0.98]"
-      }`}
-    >
-      <div
-        className={`shrink-0 h-14 w-14 rounded-xl flex items-center justify-center ${
+    <div className="relative">
+      <button
+        onClick={handleToggle}
+        className={`w-full flex items-center gap-4 rounded-2xl p-5 pr-14 transition-all text-left ${
           isTaken
-            ? "bg-[#2D2926] text-white"
-            : "bg-gray-100 text-gray-400"
+            ? "bg-[#F5EFE6] border-2 border-[#C4954A]"
+            : "bg-white border-2 border-gray-200 hover:border-[#C4954A] active:scale-[0.98]"
         }`}
       >
-        {isTaken ? (
-          <Check className="h-7 w-7" strokeWidth={3} />
-        ) : (
-          <Pill className="h-7 w-7" />
-        )}
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className={`text-[18px] font-bold ${isTaken ? "text-[#2D2926] line-through" : "text-gray-900"}`}>
-          {medication.name}
-        </p>
-        {medication.dosage && (
-          <p className={`text-[15px] mt-0.5 ${isTaken ? "text-[#B8860B]" : "text-gray-500"}`}>
-            {medication.dosage}
+        <div
+          className={`shrink-0 h-14 w-14 rounded-xl flex items-center justify-center ${
+            isTaken
+              ? "bg-[#2D2926] text-white"
+              : "bg-gray-100 text-gray-400"
+          }`}
+        >
+          {isTaken ? (
+            <Check className="h-7 w-7" strokeWidth={3} />
+          ) : (
+            <Pill className="h-7 w-7" />
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`text-[18px] font-bold ${isTaken ? "text-[#2D2926] line-through" : "text-gray-900"}`}>
+            {medication.name}
           </p>
+          {medication.dosage && (
+            <p className={`text-[15px] mt-0.5 ${isTaken ? "text-[#B8860B]" : "text-gray-500"}`}>
+              {medication.dosage}
+            </p>
+          )}
+          {medication.instructions && (
+            <p className={`text-[14px] mt-0.5 ${isTaken ? "text-[#B8860B]" : "text-gray-400"}`}>
+              {medication.instructions}
+            </p>
+          )}
+        </div>
+        {isTaken && (
+          <span className="text-[13px] font-bold text-[#B8860B] uppercase tracking-wide">
+            Done
+          </span>
         )}
-        {medication.instructions && (
-          <p className={`text-[14px] mt-0.5 ${isTaken ? "text-[#B8860B]" : "text-gray-400"}`}>
-            {medication.instructions}
-          </p>
-        )}
+      </button>
+      <div className="absolute top-3 right-3">
+        <MedicationMenu medication={medication} />
       </div>
-      {isTaken && (
-        <span className="text-[13px] font-bold text-[#B8860B] uppercase tracking-wide">
-          Done
-        </span>
-      )}
-    </button>
+    </div>
   )
 }
 
