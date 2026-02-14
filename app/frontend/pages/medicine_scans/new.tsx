@@ -204,50 +204,48 @@ export default function NewMedicineScan() {
           </h1>
         </div>
 
-        <div className="rounded-2xl bg-white border-2 border-gray-200 p-6 md:p-8">
-          {processing ? (
-            <div className="flex flex-col items-center justify-center py-16 space-y-4">
-              <Loader2 className="h-10 w-10 animate-spin text-[#B8860B]" />
-              <p className="text-[17px] font-bold text-gray-700">
-                Analyzing medicine label...
-              </p>
-              <p className="text-[14px] text-gray-500">
-                This may take a few seconds
-              </p>
-            </div>
-          ) : scan_result ? (
-            <ConfirmationForm result={scan_result} />
-          ) : (
-            <div className="space-y-6">
-              <p className="text-[16px] text-gray-600">
-                Take a photo of your medicine label or packaging.
-                AI will extract the details automatically.
-              </p>
+        {processing ? (
+          <div className="flex flex-col items-center justify-center py-20 space-y-4">
+            <Loader2 className="h-10 w-10 animate-spin text-[#B8860B]" />
+            <p className="text-[17px] font-bold text-gray-700">
+              Analyzing medicine label...
+            </p>
+            <p className="text-[14px] text-gray-500">
+              This may take a few seconds
+            </p>
+          </div>
+        ) : scan_result ? (
+          <ConfirmationForm result={scan_result} />
+        ) : (
+          <div className="space-y-6">
+            <p className="text-[16px] text-gray-600">
+              Take a photo of your medicine label or packaging.
+              AI will extract the details automatically.
+            </p>
 
-              <CameraCapture onCapture={handleCapture} />
+            <CameraCapture onCapture={handleCapture} />
 
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t-2 border-gray-200" />
-                </div>
-                <div className="relative flex justify-center text-[13px] font-bold uppercase tracking-wider">
-                  <span className="bg-white px-4 text-gray-400">Or</span>
-                </div>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t-2 border-gray-200" />
               </div>
-
-              <Button
-                asChild
-                variant="outline"
-                className="w-full h-14 rounded-xl text-[16px] font-bold border-2 border-gray-300 hover:bg-gray-50"
-              >
-                <Link href={newMedicationPath()}>
-                  <Keyboard className="h-5 w-5 mr-2" />
-                  Enter Manually
-                </Link>
-              </Button>
+              <div className="relative flex justify-center text-[13px] font-bold uppercase tracking-wider">
+                <span className="bg-[#FAF6EE] px-4 text-gray-400">Or</span>
+              </div>
             </div>
-          )}
-        </div>
+
+            <Button
+              asChild
+              variant="outline"
+              className="w-full h-14 rounded-xl text-[16px] font-bold border-2 border-gray-300 hover:bg-gray-50"
+            >
+              <Link href={newMedicationPath()}>
+                <Keyboard className="h-5 w-5 mr-2" />
+                Enter Manually
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
     </AppLayout>
   )

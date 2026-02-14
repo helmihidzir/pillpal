@@ -13,7 +13,7 @@ class MedicineScansController < InertiaController
     end
 
     result = extract_medication_info(image_data)
-    render inertia: {scan_result: result}
+    render inertia: "medicine_scans/new", props: {scan_result: result}
   end
 
   private
