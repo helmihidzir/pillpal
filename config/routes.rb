@@ -14,6 +14,10 @@ Rails.application.routes.draw do
     resource :password_reset,     only: [:new, :edit, :create, :update]
   end
 
+  resources :medications, only: [:index, :new, :create, :destroy]
+  resources :medication_logs, only: [:update]
+  resources :caregivers, only: [:index, :new, :create]
+
   get :dashboard, to: "dashboard#index"
 
   namespace :settings do

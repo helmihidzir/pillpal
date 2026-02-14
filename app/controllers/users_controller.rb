@@ -10,13 +10,13 @@ class UsersController < InertiaController
 
   def create
     @user = User.new(user_params)
+    @user.verified = true
 
     if @user.save
       session_record = @user.sessions.create!
       cookies.signed.permanent[:session_token] = {value: session_record.id, httponly: true}
 
-      send_email_verification
-      redirect_to dashboard_path, notice: "Welcome! You have signed up successfully"
+      redirect_to after_sign_up_path, notice: "Welcome! You have signed up successfully"
     else
       redirect_to sign_up_path, inertia: {errors: @user.errors}
     end
@@ -36,10 +36,10 @@ class UsersController < InertiaController
   private
 
   def user_params
-    params.permit(:email, :name, :password, :password_confirmation)
+    params.permit(:email, :name, :password, :password_confirmation, :role)
   end
 
-  def send_email_verification
-    UserMailer.with(user: @user).email_verification.deliver_later
+  def after_sign_up_path
+    @user.caregiver? ? caregivers_path : medications_path
   end
 end
