@@ -1,5 +1,5 @@
 import { Head, Link, usePage } from "@inertiajs/react"
-import { Check, CircleCheck, Heart, Moon, Pill, Sun, Sunrise, UserPlus } from "lucide-react"
+import { Check, CircleCheck, Moon, Pill, Sun, Sunrise, UserPlus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -95,8 +95,8 @@ function PatientCard({ patient }: { patient: PatientSummary }) {
 function EmptyState() {
   return (
     <div className="rounded-2xl bg-white border-2 border-gray-200 p-10 text-center">
-      <div className="h-20 w-20 rounded-2xl bg-rose-100 flex items-center justify-center mx-auto mb-5">
-        <Heart className="h-10 w-10 text-rose-500" />
+      <div className="h-20 w-20 rounded-2xl bg-[#C4954A]/15 flex items-center justify-center mx-auto mb-5">
+        <UserPlus className="h-10 w-10 text-[#B8860B]" />
       </div>
       <h3 className="text-[22px] font-bold text-gray-900 mb-2">
         No Patients Linked Yet
