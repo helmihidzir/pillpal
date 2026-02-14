@@ -45,7 +45,7 @@ export default function Welcome() {
                   </Button>
                 ) : (
                   <>
-                    <Button variant="ghost" asChild className="text-[#2D2926] hover:bg-[#2D2926]/5 rounded-full h-11 px-4 text-[15px] font-medium">
+                    <Button variant="ghost" asChild className="hidden md:inline-flex text-[#2D2926] hover:bg-[#2D2926]/5 rounded-full h-11 px-4 text-[15px] font-medium">
                       <Link href={signInPath()}>Log In</Link>
                     </Button>
                     <Button asChild className="bg-[#2D2926] hover:bg-[#1a1715] text-white rounded-full px-5 h-11 text-[15px] font-semibold">
