@@ -6,7 +6,7 @@ puts "Seeding PillPal demo data..."
 def create_patient_with_meds(name:, email:, medications:, taken: [])
   user = User.find_or_create_by(email: email) do |u|
     u.name = name
-    u.password = "password123"
+    u.password = "password"
     u.role = "patient"
   end
 
@@ -37,20 +37,10 @@ helmi_caregiver = User.find_by(email: "helmi@mail.com")
 unless helmi_caregiver
   helmi_caregiver = User.create(
     name: "Helmi", email: "helmi@mail.com",
-    password: "password123", role: "caregiver"
+    password: "password", role: "caregiver"
   )
 end
 puts "  Caregiver: #{helmi_caregiver.name} (#{helmi_caregiver.email})"
-
-# Helmi — Patient
-helmi_patient = create_patient_with_meds(
-  name: "Helmi", email: "helmi.patient@mail.com",
-  medications: [
-    { name: "Vitamin C", dosage: "1000mg", instructions: "After breakfast", times: ["morning"] },
-    { name: "Fish Oil", dosage: "1000mg", instructions: "With food", times: ["morning", "evening"] },
-    { name: "Cetirizine", dosage: "10mg", instructions: "Before bed", times: ["evening"] },
-  ]
-)
 
 # Brother
 brother = create_patient_with_meds(
@@ -79,17 +69,6 @@ nenek = create_patient_with_meds(
   taken: ["Metformin", "Lisinopril", "Omeprazole"]
 )
 
-# Atuk
-atuk = create_patient_with_meds(
-  name: "Atuk", email: "atuk@mail.com",
-  medications: [
-    { name: "Warfarin", dosage: "5mg", instructions: "Same time daily", times: ["evening"] },
-    { name: "Losartan", dosage: "50mg", instructions: "Morning before food", times: ["morning"] },
-    { name: "Paracetamol", dosage: "500mg", instructions: "When needed, max 4x daily", times: ["morning", "evening"] },
-  ],
-  taken: ["Losartan"]
-)
-
 # Mak
 mak = create_patient_with_meds(
   name: "Mak", email: "mak@mail.com",
@@ -102,32 +81,32 @@ mak = create_patient_with_meds(
   taken: ["Thyroxine", "Vitamin B12", "Calcium Carbonate", "Iron Supplement"]
 )
 
-# Ayah
-ayah = create_patient_with_meds(
-  name: "Ayah", email: "ayah@mail.com",
+# Mak Cik
+mak_cik = create_patient_with_meds(
+  name: "Mak Cik", email: "makcik@mail.com",
   medications: [
-    { name: "Gliclazide", dosage: "80mg", instructions: "Before meals", times: ["morning", "evening"] },
-    { name: "Metformin", dosage: "850mg", instructions: "After food", times: ["morning", "afternoon", "evening"] },
-    { name: "Perindopril", dosage: "4mg", instructions: "Morning on empty stomach", times: ["morning"] },
+    { name: "Metformin", dosage: "500mg", instructions: "After food", times: ["morning", "evening"] },
+    { name: "Amlodipine", dosage: "5mg", instructions: "Once daily", times: ["morning"] },
+    { name: "Atorvastatin", dosage: "40mg", instructions: "Before bed", times: ["evening"] },
   ],
-  taken: ["Gliclazide", "Perindopril"]
+  taken: ["Amlodipine"]
 )
 
-# Tok Wan
-tok_wan = create_patient_with_meds(
-  name: "Tok Wan", email: "tokwan@mail.com",
+# Pakcik
+pakcik = create_patient_with_meds(
+  name: "Pakcik", email: "pakcik@mail.com",
   medications: [
-    { name: "Donepezil", dosage: "10mg", instructions: "Before bed", times: ["evening"] },
-    { name: "Memantine", dosage: "10mg", instructions: "With or without food", times: ["morning"] },
-    { name: "Amlodipine", dosage: "10mg", instructions: "Once daily", times: ["morning"] },
-    { name: "Aspirin", dosage: "150mg", instructions: "After food", times: ["afternoon"] },
+    { name: "Gliclazide", dosage: "60mg", instructions: "Before breakfast", times: ["morning"] },
+    { name: "Losartan", dosage: "50mg", instructions: "Once daily", times: ["morning"] },
+    { name: "Aspirin", dosage: "100mg", instructions: "After lunch", times: ["afternoon"] },
     { name: "Omeprazole", dosage: "20mg", instructions: "Before breakfast", times: ["morning"] },
-  ]
+  ],
+  taken: ["Gliclazide", "Losartan", "Omeprazole"]
 )
 
 # === Caregiver Links ===
 puts "\nLinking patients to caregiver..."
-[brother, nenek, atuk, mak, ayah, tok_wan, helmi_patient].each do |patient|
+[brother, nenek, mak, mak_cik, pakcik].each do |patient|
   CaregiverPatient.find_or_create_by(caregiver_id: helmi_caregiver.id, patient_id: patient.id)
   puts "  #{helmi_caregiver.name} (caregiver) -> #{patient.name} (patient)"
 end
